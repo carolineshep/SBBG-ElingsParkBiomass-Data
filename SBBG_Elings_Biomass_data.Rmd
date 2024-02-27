@@ -1,0 +1,45 @@
+---
+title: "SBBG Elings Park Analysis"
+author: "Caroline Shepherd"
+date: "2024-02-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# read in packages
+
+library(janitor)
+library(tidyverse)
+library(here)
+library(dplyr)
+
+```
+
+
+```{r}
+# read in the data
+
+elings_data <- read.csv(here("ElingsMonitoringData.csv")) %>% clean_names()
+
+# group by plot and sum biomass 
+
+biomass <- elings_data %>% 
+  group_by(plot_id) %>% 
+  summarise(biomass_sum = sum(biomass_kg_m2))
+
+```
+
+
+```{r}
+
+#graphing biomass by plot
+
+ggplot(data = biomass, aes(x = plot_id, y = biomass_sum)) +
+  geom_col() +
+  theme_bw()
+```
+
