@@ -27,9 +27,27 @@ elings_data <- read.csv(here("ElingsMonitoringData.csv")) %>% clean_names()
 
 # group by plot and sum biomass 
 
-biomass <- elings_data %>% 
+biomass_plot <- elings_data %>% 
   group_by(plot_id) %>% 
   summarise(biomass_sum = sum(biomass_kg_m2))
+
+# group by plot and sum mortality
+
+mort_plot <- elings_data %>% 
+  group_by(plot_id) %>% 
+  summarise(mort_sum = sum(mort_status))
+
+# group by treatment and sum biomass
+
+biomass_treatment <- elings_data %>% 
+  group_by(treatment) %>% 
+  summarise(biomass_sum = sum(biomass_kg_m2))
+
+# group by treatment and sum mortality
+
+mort_treatment <- elings_data %>% 
+  group_by(treatment) %>% 
+  summarise(mort_sum = sum(mort_status))
 
 ```
 
@@ -38,8 +56,12 @@ biomass <- elings_data %>%
 
 #graphing biomass by plot
 
-ggplot(data = biomass, aes(x = plot_id, y = biomass_sum)) +
+ggplot(data = biomass_plot, aes(x = plot_id, y = biomass_sum)) +
   geom_col() +
   theme_bw()
+
+# graphing biomass by treatment
+
+ggplot()
 ```
 
