@@ -19,6 +19,9 @@ library(dplyr)
 
 ```
 
+## This code aims to synthesize and visualize data collected on Biomass (kg/m2) and Mortality of plants in the Elings Park Restoration Project. The Santa Barbara Botanic Garden, in partnership with Channel Islands Restoration, is transforming a 1-acre plot of land previously full of invasive weeds, into a better-functioning native habitat.
+
+In this analysis, we explore the relationship between different weed treatments (sheet mulching and plastic tarping) and plant mortality and growth. 
 
 ```{r}
 # read in the data
@@ -35,7 +38,7 @@ biomass_plot <- elings_data %>%
 
 mort_plot <- elings_data %>% 
   group_by(plot_id) %>% 
-  summarise(mort_sum = sum(mort_status))
+  summarise(mort_sum = sum(mort_status, na.rm = TRUE))
 
 # group by treatment and sum biomass
 
@@ -47,12 +50,15 @@ biomass_treatment <- elings_data %>%
 
 mort_treatment <- elings_data %>% 
   group_by(treatment) %>% 
-  summarise(mort_sum = sum(mort_status))
+  summarise(mort_sum = sum(mort_status, na.rm = TRUE))
 
 ```
 
 
+### Time for some data exploration! Looking at trends in mortality and biomass based on plot and treatment.
 ```{r}
+
+# explore the data! look at trends!
 
 #graphing biomass by plot
 
@@ -62,6 +68,23 @@ ggplot(data = biomass_plot, aes(x = plot_id, y = biomass_sum)) +
 
 # graphing biomass by treatment
 
-ggplot()
+ggplot(data = biomass_treatment, aes(x = treatment, y = biomass_sum)) +
+  geom_col() +
+  theme_bw()
+
+# graphing mortality by plot
+ggplot(mort_plot, aes(x = plot_id, y = mort_sum)) +
+  geom_col() +
+  theme_bw()
+
+# graphing mortality by treatment
+ggplot(data = mort_treatment, aes(x = treatment, y = mort_sum)) +
+  geom_col() +
+  theme_bw()
+
+
+# would like to look at PERCENT plants alive in next analysis
+
+
 ```
 
