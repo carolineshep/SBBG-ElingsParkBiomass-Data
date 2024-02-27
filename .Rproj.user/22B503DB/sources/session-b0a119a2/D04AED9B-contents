@@ -86,6 +86,8 @@ ggplot(data = mort_treatment, aes(x = treatment, y = mort_sum)) +
 
 
 # would like to look at PERCENT plants alive in next analysis
+# I also want to look at average biomass per plant per plot
+# and average biomass per species per treatment
 
 
 ```
