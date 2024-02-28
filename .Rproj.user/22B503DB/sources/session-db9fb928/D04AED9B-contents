@@ -2,11 +2,23 @@
 title: "SBBG Elings Park Analysis"
 author: "Caroline Shepherd"
 date: "2024-02-27"
-output: html_document
+output: 
+  html_document:
+    theme: cerulean
+    code_folding: hide
+    highlight: monochrome
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+    collapsed: yes
+    smooth_scroll: yes
+    number_sections: no
+editor_options:
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```
 
 ```{r}
@@ -57,19 +69,19 @@ mort_treatment <- elings_data %>%
 ```
 
 
-### Time for some data exploration! Looking at trends in mortality and biomass based on plot and treatment.
+### Data exploration! 
+
+Looking at trends in mortality and biomass based on plot and treatment.
 ```{r}
 
 # explore the data! look at trends!
 
 #graphing biomass by plot
-
 ggplot(data = biomass_plot, aes(x = plot_id, y = biomass_sum)) +
   geom_col() +
   theme_bw()
 
 # graphing biomass by treatment
-
 ggplot(data = biomass_treatment, aes(x = treatment, y = biomass_sum)) +
   geom_col() +
   theme_bw()
@@ -92,3 +104,32 @@ ggplot(data = mort_treatment, aes(x = treatment, y = mort_sum)) +
 
 ```
 
+
+Continued analysis
+```{r}
+
+#calculating % plants alive in each plot
+tarp_filt <- elings_data %>% 
+  filter(treatment == "tarp")
+
+tarp_perc <- sum()
+  
+
+```
+
+
+
+## Future plans
+
+Future analysis will include:
+
+- looking at percent of plants alive in each plot and treatment
+
+- analyzing average biomass per plant per plot
+
+- average biomass per species per treatment
+
+To answer these questions:
+Do tarped plots or mulched plots promote more growth?
+Which treatment has the lowest mortality rate?
+Which species performed the best (in terms of growth and survival) in each plot and each treatment? Is one treatment better for some plants, while the other treatment is better for other plants?

@@ -1,0 +1,177 @@
+---
+title: 'esm232 assignment3: sensitivity analysis'
+author: "Caroline Shepherd and Trevor Maggart"
+date: "4/27/2023"
+output:
+  html_document:
+    theme: cerulean
+    code_folding: hide
+    highlight: monochrome
+    toc: yes
+    toc_depth: 5
+    toc_float: yes
+    collapsed: yes
+    smooth_scroll: yes
+    number_sections: no
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+# read in packages
+library(tidyverse)
+library(here)
+library(purrr)
+library(ggpubr)
+```
+
+
+
+```{r, include=TRUE}
+# working area - creating code needed for function
+# read in climate text file
+climate <- read.table(here("data", "clim.txt"), header=T)
+
+climate_test <- climate %>% 
+    group_by(year,month) %>% 
+    summarize(tmin = min(tmin_c),
+              tmax = max(tmax_c),
+              precip_sum = sum(precip))
+
+Tn2 <- (climate_test %>% filter(month==2))$tmin
+P1 <- (climate_test %>% filter(month==1))$precip_sum
+
+Y = (-0.015)*Tn2 - (0.0046)*(Tn2**2) - (0.07*P1) + (0.0043)*(P1**2) + 0.28
+
+```
+
+
+
+
+### Almond crop yield function (with added profit parameter):
+```{r, include=TRUE, class.source = "fold-show"}
+#' Crop Yield Anomaly Function
+#' 
+#' Compute a crop yield anomaly for almonds
+#' @param climate_data dataframe of climate data (include columns: year, month, day, tmin_c, tmax_c, precip)
+#' @param tmin1_coeff minimum temperature coefficient
+#' @param tmin2_coeff minimum squared temperature coefficient
+#' @param precip1_coeff precipitation sum coefficient
+#' @param precip2_coeff precipitation sum squared coefficient
+#' @param intercept y-intercept
+#' @param profit amount of profit per ton
+#' @return list of mean, max, and min monthly yield
+#' @examples
+#' month_yld_almond(climate)
+#' Tn2 = (Minimum temperature) in February (Degrees C)
+#' P1 = (Sum of precipitation) in January (mm)
+
+yld_almond <- function(climate_data, tmin1_coeff = -0.015, tmin2_coeff = 0.0046, precip1_coeff = 0.07, precip2_coeff = 0.0043, intercept = 0.28, price_ton = 3500, base_profit = 3168){
+  
+  climate_data <- climate_data %>% 
+    # group by year and month
+    group_by(year, month) %>%
+    #find the min temp, max temp, and sum of precipitation (each monthly)
+    summarize(tmin_mean = mean(tmin_c),
+              tmax_mean = mean(tmax_c),
+              precip_sum = sum(precip))
+ 
+  # create variables for minimum temperature and precipitation sum
+  Tn2 <- (climate_data %>% filter(month == 2))$tmin_mean
+  P1 <- (climate_data %>% filter(month == 1))$precip_sum
+  year <- unique((climate_data %>% filter(year > 1988 & year < 2010))$year)
+  
+  # equation for monthly almond yield
+  Y = ((tmin1_coeff)*Tn2 - (tmin2_coeff)*(Tn2**2) - (precip1_coeff*P1) + (precip2_coeff)*(P1**2) + intercept)
+  
+  # equation for profit yield
+  profit = base_profit + Y[2:22]*price_ton
+  
+  # define function output to return min, max, and mean almond crop yield
+  return(as.list(data.frame(year, profit)))
+    
+}
+  
+# testing function
+yld_almond(climate)
+```
+
+## Sensitivity Analysis
+
+Testing for the uncertainties in `tmin1_coeff` and `precip2_coeff` and `price_ton` parameters, which should affect almond yield.
+
+For `tmin1_coeff`:
+* Default value of the parameter is -0.015
+* Uncertainty of 0.15 (15%) for parameter value
+* Uniform distribution since we do not know anything about variation
+
+For `precip2_coeff`:
+* Default value of parameter is 0.0043
+* Uncertainty of 0.15 (15%) for parameter value
+* Uniform distribution since we do not know anything about variation
+
+For `price_ton`, the following assumptions were made to randomly generate samples:
+* Default (mean) price is $3500/ton/acre
+* One sd is $200/ton/acre
+* Changes in price follow normal distribution (?)
+
+```{r, class.source = "fold-show"}
+# lets try sensitivity analysis again, 
+# tmin1_coeff - is defaulted to 0.015; lets try +/- 15%
+# lets try 200 samples & assume a uniform distribution - we don't know anything about variation
+deviation = 0.15
+base_tmin1_coeff = -0.015
+tmin1_coeff <- runif(min = base_tmin1_coeff+deviation*base_tmin1_coeff, 
+                     max = base_tmin1_coeff-deviation*base_tmin1_coeff, 
+                     n = 200)
+
+base_precip2_coeff <- 0.0043
+precip2_coeff <- runif(min = base_precip2_coeff - base_precip2_coeff*0.04,
+                 max = base_precip2_coeff + base_precip2_coeff*0.04,
+                 n = 200)
+
+# price samples
+price_ton <- rnorm(mean = 3500, sd = 150, n = 200)
+
+# bind samples together in one df
+parameters <- cbind.data.frame(tmin1_coeff, precip2_coeff, price_ton)
+
+```
+
+```{r, include = T}
+
+# Using pmap()
+# takes function name and then names of all parameters that don't change
+results <- parameters %>% pmap(yld_almond,
+                               climate_data = climate)
+
+### Extract results from list into df
+profit <- map_df(results,`[`, c("year", "profit")) 
+
+### Bind results to the input parameters
+profit <- cbind.data.frame(profit, parameters)
+
+# Exploratory mapping:
+
+# p1 = ggplot(profit, aes(x = tmin1_coeff, y = profit, col=precip2_coeff))+
+  #geom_point(cex=2)+
+  #labs(y="Profit (USD/TON/ACRE)", x="tmin1 coefficient")
+
+# p2 = ggplot(profit, aes(x = precip2_coeff, y = profit, col=tmin1_coeff))+
+  #geom_point(cex=2)+
+  #labs(y="Profit (USD/TON/ACRE)", x="precip1 coefficient")
+
+# ggarrange(p1,p2)
+
+
+```
+
+Final profit visualization
+```{r}
+ggplot(profit, aes(x = as.factor(year), y = profit, group = year)) +
+  geom_boxplot(fill = 'white', color = 'lightblue3') + 
+  labs(y="Annual Profit ($/ton/acre)", x="Year") +
+  theme_minimal()
+```
