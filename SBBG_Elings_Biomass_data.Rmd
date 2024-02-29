@@ -49,6 +49,7 @@ biomass_plot <- elings_data %>%
   summarise(biomass_sum = sum(biomass_kg_m2))
 
 # group by plot and sum mortality
+# I double checked and this is correctly summing # of alive plants
 
 mort_plot <- elings_data %>% 
   group_by(plot_id) %>% 
