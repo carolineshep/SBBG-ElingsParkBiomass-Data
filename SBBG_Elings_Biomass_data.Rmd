@@ -39,8 +39,12 @@ In this analysis, we explore the relationship between different weed treatments 
 
 ```{r}
 # read in the data
-
-elings_data <- read.csv(here("ElingsMonitoringData.csv")) %>% clean_names()
+# Make sure you have the most updated data
+elings_data <- read.csv(here("ElingsMonitoringData28Feb.csv")) %>% clean_names() %>% 
+  rename(width1_cm = width1_cm_widest_diameter,
+         width2_cm = width2_cm_perpendicular_to_w1_measurement) %>% 
+  mutate(width1_m = width1_cm/100,
+         width2_m = width2_cm/100)
 
 # group by plot and sum biomass 
 
@@ -80,22 +84,30 @@ Looking at trends in mortality and biomass based on plot and treatment.
 #graphing biomass by plot
 ggplot(data = biomass_plot, aes(x = plot_id, y = biomass_sum)) +
   geom_col() +
-  theme_bw()
+  theme_bw() +
+  labs(x = "Plot ID",
+       y = "Total Biomass (kg/m2)")
 
 # graphing biomass by treatment
 ggplot(data = biomass_treatment, aes(x = treatment, y = biomass_sum)) +
   geom_col() +
-  theme_bw()
+  theme_bw() +
+  labs(x = "Treatment",
+       y = "Total Biomass (kg/m2)")
 
 # graphing mortality by plot
 ggplot(mort_plot, aes(x = plot_id, y = mort_sum)) +
   geom_col() +
-  theme_bw()
+  theme_bw() +
+  labs(x = "Plot ID",
+       y = "Total Number of Live Plants")
 
 # graphing mortality by treatment
 ggplot(data = mort_treatment, aes(x = treatment, y = mort_sum)) +
   geom_col() +
-  theme_bw()
+  theme_bw() +
+  labs(x = "Treatment",
+       y = "Total Number of Live Plants")
 
 
 # would like to look at PERCENT plants alive in next analysis
@@ -110,11 +122,18 @@ Continued analysis
 ```{r}
 
 #calculating % plants alive in each plot
-tarp_filt <- elings_data %>% 
-  filter(treatment == "tarp")
 
-tarp_perc <- sum()
+#filtering for only tarp treatment to see the total number of plants (both A and D)
+tarp_filt <- elings_data %>% 
+  filter(treatment == "tarp") %>% 
+  count(mortality_status) 
   
+#filtering for only mulch treatment to see the total number of plants (both A and D)
+mulch_filt <- elings_data %>% 
+  filter(treatment == "mulch") %>% 
+  count(mortality_status)
+
+tarp_perc = (mortality_status == "A" | "D")
 
 ```
 
@@ -129,6 +148,17 @@ Future analysis will include:
 - analyzing average biomass per plant per plot
 
 - average biomass per species per treatment
+
+- compare san diego scrub species across treatments (bergaro, lycium, agave, amorpha, euphorbia) how are species that wouldn't normally be found at Elings
+
+- maybe comparing species that are from further south, further inland, or tried and true SB natives
+
+- compare mortality between provinces within treatments
+
+- rates of growth in future surveys
+
+- does decomposition correlate to plant growth in any way?
+
 
 To answer these questions:
 Do tarped plots or mulched plots promote more growth?
