@@ -102,7 +102,7 @@ mort_treatment <- elings_data %>%
 ```
 
 
-### Data exploration! 
+### Data exploration
 
 Looking at trends in mortality and biomass based on plot and treatment.
 ```{r}
@@ -161,7 +161,7 @@ mulch_filt <- elings_data %>%
   filter(treatment == "mulch") %>% 
   count(mortality_status)
 
-tarp_perc = (mortality_status == "A" | "D")
+# this isn't working, but I want to find the % alive for tarped vs mulched plots -->tarp_perc = (mortality_status == "A" | "D")
 
 ```
 
@@ -188,7 +188,14 @@ Future analysis will include:
 - does decomposition correlate to plant growth in any way?
 
 
-To answer these questions:
-Do tarped plots or mulched plots promote more growth?
-Which treatment has the lowest mortality rate?
-Which species performed the best (in terms of growth and survival) in each plot and each treatment? Is one treatment better for some plants, while the other treatment is better for other plants?
+The analysis will (hopefully) answer these questions:
+
+- Do tarped plots or mulched plots promote more growth?
+
+- Which treatment has the lowest mortality rate?
+
+- Which species performed the best (in terms of growth and survival) in each plot and each treatment? Is one treatment better for some plants, while the other treatment is better for other plants?
+
+- Does origin impact plant mortality or growth?
+
+- Which stpu location grew the most? Which stpu location had the best survival rates?
