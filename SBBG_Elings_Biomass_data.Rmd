@@ -41,10 +41,38 @@ In this analysis, we explore the relationship between different weed treatments 
 # read in the data
 # Make sure you have the most updated data
 elings_data <- read.csv(here("ElingsMonitoringData28Feb.csv")) %>% clean_names() %>% 
-  rename(width1_cm = width1_cm_widest_diameter,
+  rename(width1_cm = width1_cm_widest_diameter, # changing column names to be less annoying
          width2_cm = width2_cm_perpendicular_to_w1_measurement) %>% 
-  mutate(width1_m = width1_cm/100,
-         width2_m = width2_cm/100)
+  mutate(width1_m = width1_cm/100,  #making a width column in meters
+         width2_m = width2_cm/100) %>% 
+  mutate(veg_type = case_when(species_id == "BOBA" ~ "herb",
+                              species_id == "STPU" ~ "herb",
+                              species_id == "BRCA" ~ "herb",
+                              species_id == "CAMA" ~ "herb",
+                              species_id == "COFI" ~ "herb",
+                              species_id == "EPCA" ~ "herb",
+                              species_id == "GRCA" ~ "herb",
+                              species_id == "LECO" ~ "herb",
+                              species_id == "SODO" ~ "herb",
+                              species_id == "SPAM" ~ "herb",
+                              species_id == "ACGL" ~ "shrub",
+                              species_id == "AGSH" ~ "shrub",
+                              species_id == "ARCA" ~ "shrub",
+                              species_id == "ATLE" ~ "shrub",
+                              species_id == "BAPI" ~ "shrub",
+                              species_id == "BEEM" ~ "shrub",
+                              species_id == "ENCA" ~ "shrub",
+                              species_id == "ERFA" ~ "shrub",
+                              species_id == "EUMI" ~ "shrub",
+                              species_id == "HEWH" ~ "shrub",
+                              species_id == "ISME" ~ "shrub",
+                              species_id == "LEGI" ~ "shrub",
+                              species_id == "LYCA" ~ "shrub",
+                              species_id == "MAFA" ~ "shrub",
+                              species_id == "PEAR" ~ "shrub",
+                              species_id == "RHCR" ~ "shrub",
+                              species_id == "RHIN" ~ "shrub",
+                              species_id == "SAAP" ~ "shrub"))
 
 # group by plot and sum biomass 
 
