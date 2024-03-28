@@ -74,6 +74,9 @@ elings_data <- read.csv(here("ElingsMonitoringData28Feb.csv")) %>% clean_names()
                               species_id == "RHIN" ~ "shrub",
                               species_id == "SAAP" ~ "shrub"))
 
+# need to create function to calculate biomass
+
+
 # group by plot and sum biomass 
 
 biomass_plot <- elings_data %>% 

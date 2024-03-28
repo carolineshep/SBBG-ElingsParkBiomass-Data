@@ -1689,30 +1689,33 @@ growth.</p>
 <span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>                              species_id <span class="sc">==</span> <span class="st">&quot;RHIN&quot;</span> <span class="sc">~</span> <span class="st">&quot;shrub&quot;</span>,</span>
 <span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>                              species_id <span class="sc">==</span> <span class="st">&quot;SAAP&quot;</span> <span class="sc">~</span> <span class="st">&quot;shrub&quot;</span>))</span>
 <span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co"># group by plot and sum biomass </span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co"># need to create function to calculate biomass</span></span>
 <span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a>biomass_plot <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
-<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a>  <span class="fu">group_by</span>(plot_id) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">biomass_sum =</span> <span class="fu">sum</span>(biomass_kg_m2))</span>
-<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a></span>
-<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a><span class="co"># group by plot and sum mortality</span></span>
-<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a><span class="co"># I double checked and this is correctly summing # of alive plants</span></span>
+<span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co"># group by plot and sum biomass </span></span>
+<span id="cb2-41"><a href="#cb2-41" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" tabindex="-1"></a>biomass_plot <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
+<span id="cb2-43"><a href="#cb2-43" tabindex="-1"></a>  <span class="fu">group_by</span>(plot_id) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-44"><a href="#cb2-44" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">biomass_sum =</span> <span class="fu">sum</span>(biomass_kg_m2))</span>
 <span id="cb2-45"><a href="#cb2-45" tabindex="-1"></a></span>
-<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a>mort_plot <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
-<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a>  <span class="fu">group_by</span>(plot_id) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mort_sum =</span> <span class="fu">sum</span>(mort_status, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a></span>
-<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a><span class="co"># group by treatment and sum biomass</span></span>
-<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a></span>
-<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a>biomass_treatment <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
-<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">biomass_sum =</span> <span class="fu">sum</span>(biomass_kg_m2))</span>
-<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a></span>
-<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a><span class="co"># group by treatment and sum mortality</span></span>
-<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a></span>
-<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a>mort_treatment <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
-<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">%&gt;%</span> </span>
-<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mort_sum =</span> <span class="fu">sum</span>(mort_status, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<span id="cb2-46"><a href="#cb2-46" tabindex="-1"></a><span class="co"># group by plot and sum mortality</span></span>
+<span id="cb2-47"><a href="#cb2-47" tabindex="-1"></a><span class="co"># I double checked and this is correctly summing # of alive plants</span></span>
+<span id="cb2-48"><a href="#cb2-48" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" tabindex="-1"></a>mort_plot <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
+<span id="cb2-50"><a href="#cb2-50" tabindex="-1"></a>  <span class="fu">group_by</span>(plot_id) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-51"><a href="#cb2-51" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mort_sum =</span> <span class="fu">sum</span>(mort_status, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb2-52"><a href="#cb2-52" tabindex="-1"></a></span>
+<span id="cb2-53"><a href="#cb2-53" tabindex="-1"></a><span class="co"># group by treatment and sum biomass</span></span>
+<span id="cb2-54"><a href="#cb2-54" tabindex="-1"></a></span>
+<span id="cb2-55"><a href="#cb2-55" tabindex="-1"></a>biomass_treatment <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
+<span id="cb2-56"><a href="#cb2-56" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-57"><a href="#cb2-57" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">biomass_sum =</span> <span class="fu">sum</span>(biomass_kg_m2))</span>
+<span id="cb2-58"><a href="#cb2-58" tabindex="-1"></a></span>
+<span id="cb2-59"><a href="#cb2-59" tabindex="-1"></a><span class="co"># group by treatment and sum mortality</span></span>
+<span id="cb2-60"><a href="#cb2-60" tabindex="-1"></a></span>
+<span id="cb2-61"><a href="#cb2-61" tabindex="-1"></a>mort_treatment <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
+<span id="cb2-62"><a href="#cb2-62" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-63"><a href="#cb2-63" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mort_sum =</span> <span class="fu">sum</span>(mort_status, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
 <div id="data-exploration" class="section level3">
 <h3>Data exploration</h3>
 <p>Looking at trends in mortality and biomass based on plot and
