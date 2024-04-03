@@ -40,7 +40,7 @@ In this analysis, we explore the relationship between different weed treatments 
 ```{r}
 # read in the data
 # Make sure you have the most updated data
-elings_data <- read.csv(here("ElingsMonitoringData28Feb.csv")) %>% clean_names() %>% 
+elings_data <- read.csv(here("ElingsMonitoringData25March2024.csv")) %>% clean_names() %>% 
   rename(width1_cm = width1_cm_widest_diameter, # changing column names to be less annoying
          width2_cm = width2_cm_perpendicular_to_w1_measurement) %>% 
   mutate(width1_m = width1_cm/100,  #making a width column in meters
@@ -156,11 +156,14 @@ Continued analysis
 
 #filtering for only tarp treatment to see the total number of plants (both A and D)
 tarp_filt <- elings_data %>% 
+  filter(mortality_status == "D" | mortality_status == "A") %>% 
   filter(treatment == "tarp") %>% 
   count(mortality_status) 
+
   
 #filtering for only mulch treatment to see the total number of plants (both A and D)
 mulch_filt <- elings_data %>% 
+  filter(mortality_status == "D" | mortality_status == "A") %>% 
   filter(treatment == "mulch") %>% 
   count(mortality_status)
 
