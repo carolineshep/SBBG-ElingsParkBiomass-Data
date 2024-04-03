@@ -176,6 +176,9 @@ mulch_filt <- elings_data %>%
 #filtering for mortality data and grouping by plot
 plot_filt <- elings_data %>% 
   group_by(plot_id) %>% 
+  filter(mortality_status == "D" | mortality_status == "A") %>% 
+  count(mortality_status) 
+  
   
 
 # I want to find the % alive for tarped vs mulched plots -->tarp_perc = (mortality_status == "A" | "D")
