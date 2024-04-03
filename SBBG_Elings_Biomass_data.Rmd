@@ -24,10 +24,10 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 ```{r}
 # read in packages
 
-library(janitor)
-library(tidyverse)
-library(here)
-library(dplyr)
+library(janitor) #helps clean data, idk if it does anything else
+library(tidyverse) #helps clean and manipulate data
+library(here) #helps read in data 
+library(dplyr) #helps with data analysis
 
 ```
 
@@ -74,7 +74,7 @@ elings_data <- read.csv(here("ElingsMonitoringData25March2024.csv")) %>% clean_n
                               species_id == "RHIN" ~ "shrub",
                               species_id == "SAAP" ~ "shrub"))
 
-# need to create function to calculate biomass
+# need to create function to calculate biomass - jk I made it in excel. Still might want to make it in R at some point
 
 
 # group by plot and sum biomass 
@@ -173,7 +173,13 @@ mulch_filt <- elings_data %>%
                                    across(where(is.character), ~'Total'))) %>% 
   rename(plant_count = n)
 
+#filtering for mortality data and grouping by plot
+plot_filt <- elings_data %>% 
+  group_by(plot_id) %>% 
+  
+
 # I want to find the % alive for tarped vs mulched plots -->tarp_perc = (mortality_status == "A" | "D")
+#also need to find percent plants alive per PLOT
 
 ```
 
