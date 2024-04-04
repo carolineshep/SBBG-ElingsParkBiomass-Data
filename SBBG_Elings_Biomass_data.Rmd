@@ -28,7 +28,7 @@ library(janitor) #helps clean data, idk if it does anything else
 library(tidyverse) #helps clean and manipulate data
 library(here) #helps read in data 
 library(dplyr) #helps with data analysis
-
+library(kableExtra) #helps make pretty tables to show data in knitted html or to save as png
 ```
 
 ## Introduction:
@@ -150,7 +150,8 @@ ggplot(data = mort_treatment, aes(x = treatment, y = mort_sum)) +
 ```
 
 
-Continued analysis
+## Continued analysis
+The following code examines the differences in biomass and mortality rates for species based on region, province, treatment, and plot.
 ```{r}
 
 #calculating % plants alive in each plot
@@ -192,6 +193,12 @@ plot_filt <- elings_data %>%
                                plot_id == "G" ~ "Mulch",
                                plot_id == "H" ~ "Tarp"))
 
+plot_filt %>% 
+  kable(caption = "Plot Mortality Status Data",
+        col.names = c("Plot ID","# Alive Plants","# Dead Plants", "Total","Proportion of plants alive","Proportion of plants dead", "Biomass kg/m2", "Treatment"),
+        format = "html",table.attr = "style = 'width:70%'") %>% 
+  kable_styling(bootstrap_options = "striped")
+
 region_filt <- elings_data %>% 
   group_by(region) %>% 
   summarise(alive_pl = sum(mortality_status == "A"),
@@ -200,6 +207,9 @@ region_filt <- elings_data %>%
             alive_prop = alive_pl / total,
             dead_prop = dead_pl / total,
             biomass = sum(biomass_kg_m2))
+
+
+
 
 province_stpu <- elings_data %>% 
   filter(province_info == "SB" | province_info == "IRV" | province_info == "SD") %>% 
@@ -212,6 +222,13 @@ province_stpu <- elings_data %>%
             dead_prop = dead_pl / total,
             biomass = sum(biomass_kg_m2))
 
+province_stpu %>%
+  kable(caption = "Stipa Pulchra Province Data",
+        col.names = c("Province Info", "# Alive Plants", "# Dead Plants", "Total", "Proportion of plants alive", "Proportion of plants dead", "Biomass kg/m2"),
+        format = "html", table.attr = "style = 'width:80%;'") %>% 
+  kable_styling(bootstrap_options = "striped")
+  
+
 province_epca <- elings_data %>% 
   filter(province_info == "SB" | province_info == "IRV" | province_info == "SD") %>% 
   filter(species_id == "EPCA") %>% 
@@ -222,6 +239,20 @@ province_epca <- elings_data %>%
             alive_prop = alive_pl / total,
             dead_prop = dead_pl / total,
             biomass = sum(biomass_kg_m2))
+
+province_epca %>% 
+  kable(caption = "Epilobium Canum Province Data",
+        col.names = c("Province Info", "# Alive Plants", "# Dead Plants", "Total","Proportion of plants alive", "Proportion of plants dead", "Biomass kg/m2"),
+        format = "html", table.attr = "style = 'width:80%;'") %>% 
+  kable_styling(bootstrap_options = c("hover", "condensed"))
+
+```
+
+Now let's plot the filtered data
+
+```{r}
+
+
 
 ```
 
