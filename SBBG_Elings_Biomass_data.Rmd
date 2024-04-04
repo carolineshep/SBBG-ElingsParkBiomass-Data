@@ -201,6 +201,27 @@ region_filt <- elings_data %>%
             dead_prop = dead_pl / total,
             biomass = sum(biomass_kg_m2))
 
+province_stpu <- elings_data %>% 
+  filter(province_info == "SB" | province_info == "IRV" | province_info == "SD") %>% 
+  filter(species_id == "STPU") %>% 
+  group_by(province_info) %>% 
+  summarise(alive_pl = sum(mortality_status == "A"),
+            dead_pl = sum(mortality_status == "D"),
+            total = alive_pl + dead_pl,
+            alive_prop = alive_pl / total,
+            dead_prop = dead_pl / total,
+            biomass = sum(biomass_kg_m2))
+
+province_epca <- elings_data %>% 
+  filter(province_info == "SB" | province_info == "IRV" | province_info == "SD") %>% 
+  filter(species_id == "EPCA") %>% 
+  group_by(province_info) %>% 
+  summarise(alive_pl = sum(mortality_status == "A"),
+            dead_pl = sum(mortality_status == "D"),
+            total = alive_pl + dead_pl,
+            alive_prop = alive_pl / total,
+            dead_prop = dead_pl / total,
+            biomass = sum(biomass_kg_m2))
 
 ```
 
