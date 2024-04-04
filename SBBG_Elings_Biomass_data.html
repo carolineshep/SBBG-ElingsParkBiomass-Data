@@ -1639,10 +1639,10 @@ border-radius: 0px;
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># read in packages</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co">#helps clean data, idk if it does anything else</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co">#helps clean and manipulate data</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">library</span>(here) <span class="co">#helps read in data </span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co">#helps with data analysis</span></span></code></pre></div>
 <div id="introduction" class="section level2">
 <h2>Introduction:</h2>
 <p>This code aims to synthesize and visualize data collected on Biomass
@@ -1655,7 +1655,7 @@ treatments (sheet mulching and plastic tarping) and plant mortality and
 growth.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># read in the data</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co"># Make sure you have the most updated data</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>elings_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">&quot;ElingsMonitoringData28Feb.csv&quot;</span>)) <span class="sc">%&gt;%</span> <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>elings_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">&quot;ElingsMonitoringData25March2024.csv&quot;</span>)) <span class="sc">%&gt;%</span> <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span> </span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">width1_cm =</span> width1_cm_widest_diameter, <span class="co"># changing column names to be less annoying</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>         <span class="at">width2_cm =</span> width2_cm_perpendicular_to_w1_measurement) <span class="sc">%&gt;%</span> </span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">width1_m =</span> width1_cm<span class="sc">/</span><span class="dv">100</span>,  <span class="co">#making a width column in meters</span></span>
@@ -1689,7 +1689,7 @@ growth.</p>
 <span id="cb2-34"><a href="#cb2-34" tabindex="-1"></a>                              species_id <span class="sc">==</span> <span class="st">&quot;RHIN&quot;</span> <span class="sc">~</span> <span class="st">&quot;shrub&quot;</span>,</span>
 <span id="cb2-35"><a href="#cb2-35" tabindex="-1"></a>                              species_id <span class="sc">==</span> <span class="st">&quot;SAAP&quot;</span> <span class="sc">~</span> <span class="st">&quot;shrub&quot;</span>))</span>
 <span id="cb2-36"><a href="#cb2-36" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co"># need to create function to calculate biomass</span></span>
+<span id="cb2-37"><a href="#cb2-37" tabindex="-1"></a><span class="co"># need to create function to calculate biomass - jk I made it in excel. Still might want to make it in R at some point</span></span>
 <span id="cb2-38"><a href="#cb2-38" tabindex="-1"></a></span>
 <span id="cb2-39"><a href="#cb2-39" tabindex="-1"></a></span>
 <span id="cb2-40"><a href="#cb2-40" tabindex="-1"></a><span class="co"># group by plot and sum biomass </span></span>
@@ -1757,16 +1757,34 @@ treatment.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co">#calculating % plants alive in each plot</span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co">#filtering for only tarp treatment to see the total number of plants (both A and D)</span></span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>tarp_filt <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">==</span> <span class="st">&quot;tarp&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">count</span>(mortality_status) </span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  </span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#filtering for only mulch treatment to see the total number of plants (both A and D)</span></span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>mulch_filt <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">==</span> <span class="st">&quot;mulch&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  <span class="fu">count</span>(mortality_status)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>tarp_filt <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> <span class="co">#calling on elings_data for the data frame</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">filter</span>(mortality_status <span class="sc">==</span> <span class="st">&quot;D&quot;</span> <span class="sc">|</span> mortality_status <span class="sc">==</span> <span class="st">&quot;A&quot;</span>) <span class="sc">%&gt;%</span> <span class="co">#filtering for non-NA values</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">==</span> <span class="st">&quot;tarp&quot;</span>) <span class="sc">%&gt;%</span> <span class="co">#filtering for only tarped plants</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="fu">count</span>(mortality_status) <span class="sc">%&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>            <span class="fu">bind_rows</span>(<span class="fu">summarise</span>(., <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), sum),</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>                                   <span class="fu">across</span>(<span class="fu">where</span>(is.character), <span class="sc">~</span><span class="st">&#39;Total&#39;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">plant_count =</span> n)</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a></span>
 <span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co"># this isn&#39;t working, but I want to find the % alive for tarped vs mulched plots --&gt;tarp_perc = (mortality_status == &quot;A&quot; | &quot;D&quot;)</span></span></code></pre></div>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#filtering for only mulch treatment to see the total number of plants (both A and D)</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>mulch_filt <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>  <span class="fu">filter</span>(mortality_status <span class="sc">==</span> <span class="st">&quot;D&quot;</span> <span class="sc">|</span> mortality_status <span class="sc">==</span> <span class="st">&quot;A&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>  <span class="fu">filter</span>(treatment <span class="sc">==</span> <span class="st">&quot;mulch&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>  <span class="fu">count</span>(mortality_status) <span class="sc">%&gt;%</span></span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>            <span class="fu">bind_rows</span>(<span class="fu">summarise</span>(., <span class="fu">across</span>(<span class="fu">where</span>(is.numeric), sum),</span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>                                   <span class="fu">across</span>(<span class="fu">where</span>(is.character), <span class="sc">~</span><span class="st">&#39;Total&#39;</span>))) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">plant_count =</span> n)</span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="co">#filtering for mortality data and grouping by plot</span></span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>plot_filt <span class="ot">&lt;-</span> elings_data <span class="sc">%&gt;%</span> </span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>  <span class="fu">group_by</span>(plot_id) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a>  <span class="fu">filter</span>(mortality_status <span class="sc">==</span> <span class="st">&quot;D&quot;</span> <span class="sc">|</span> mortality_status <span class="sc">==</span> <span class="st">&quot;A&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a>  <span class="fu">count</span>(mortality_status) </span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a>  </span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a>  </span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co"># I want to find the % alive for tarped vs mulched plots --&gt;tarp_perc = (mortality_status == &quot;A&quot; | &quot;D&quot;)</span></span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#also need to find percent plants alive per PLOT</span></span></code></pre></div>
 </div>
 </div>
 <div id="future-plans" class="section level2">

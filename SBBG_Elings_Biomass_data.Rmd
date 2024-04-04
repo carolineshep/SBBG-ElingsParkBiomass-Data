@@ -41,6 +41,7 @@ In this analysis, we explore the relationship between different weed treatments 
 # read in the data
 # Make sure you have the most updated data
 elings_data <- read.csv(here("ElingsMonitoringData25March2024.csv")) %>% clean_names() %>% 
+  filter(species_id != "EMPTY") %>%  
   rename(width1_cm = width1_cm_widest_diameter, # changing column names to be less annoying
          width2_cm = width2_cm_perpendicular_to_w1_measurement) %>% 
   mutate(width1_m = width1_cm/100,  #making a width column in meters
@@ -176,15 +177,24 @@ mulch_filt <- elings_data %>%
 #filtering for mortality data and grouping by plot
 plot_filt <- elings_data %>% 
   group_by(plot_id) %>% 
-  filter(mortality_status == "D" | mortality_status == "A") %>% 
-  count(mortality_status) 
-  
-  
+  summarise(alive_pl = sum(mortality_status == "A"),
+            dead_pl = sum(mortality_status == "D"),
+            total = alive_pl + dead_pl,
+            alive_prop = alive_pl / total,
+            dead_prop = dead_pl / total,
+            biomass = sum(biomass_kg_m2)) %>% 
+  mutate(treatment = case_when(plot_id == "A" ~ "Tarp", # adding a treatment column
+                               plot_id == "B" ~ "Mulch",
+                               plot_id == "C" ~ "Tarp",
+                               plot_id == "D" ~ "Mulch",
+                               plot_id == "E" ~ "Mulch",
+                               plot_id == "F" ~ "Tarp",
+                               plot_id == "G" ~ "Mulch",
+                               plot_id == "H" ~ "Tarp"))
 
-# I want to find the % alive for tarped vs mulched plots -->tarp_perc = (mortality_status == "A" | "D")
-#also need to find percent plants alive per PLOT
 
 ```
+
 
 
 
@@ -193,6 +203,8 @@ plot_filt <- elings_data %>%
 Future analysis will include:
 
 - looking at percent of plants alive in each plot and treatment
+
+- color = treatment to make graphs better
 
 - analyzing average biomass per plant per plot
 
