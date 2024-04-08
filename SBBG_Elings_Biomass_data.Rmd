@@ -151,7 +151,7 @@ ggplot(data = mort_treatment, aes(x = treatment, y = mort_sum)) +
 
 
 ## Continued analysis
-The following code examines the differences in biomass and mortality rates for species based on region, province, treatment, and plot.
+The following code examines the differences in biomass and mortality for species based on region, province, treatment, and plot.
 ```{r}
 
 #calculating % plants alive in each plot
@@ -225,7 +225,7 @@ province_stpu <- elings_data %>%
 
 province_stpu %>%
   kable(caption = "Stipa Pulchra Province Data",
-        col.names = c("Province Info", "# Alive Plants", "# Dead Plants", "Total", "Proportion of plants alive", "Proportion of plants dead", "Biomass kg/m2"),
+        col.names = c("Province Info", "# Alive Plants", "# Dead Plants", "Total", "Proportion of plants alive", "Proportion of plants dead", "Biomass kg/m2", "Biomass kg/m2 per plant"),
         format = "html", table.attr = "style = 'width:80%;'") %>% 
   kable_styling(bootstrap_options = "striped")
   
@@ -244,7 +244,7 @@ province_epca <- elings_data %>%
 
 province_epca %>% 
   kable(caption = "Epilobium Canum Province Data",
-        col.names = c("Province Info", "# Alive Plants", "# Dead Plants", "Total","Proportion of plants alive", "Proportion of plants dead", "Biomass kg/m2"),
+        col.names = c("Province Info", "# Alive Plants", "# Dead Plants", "Total","Proportion of plants alive", "Proportion of plants dead", "Biomass kg/m2", "Biomass kg/m2 per plant"),
         format = "html", table.attr = "style = 'width:80%;'") %>% 
   kable_styling(bootstrap_options = c("hover", "condensed"))
 
