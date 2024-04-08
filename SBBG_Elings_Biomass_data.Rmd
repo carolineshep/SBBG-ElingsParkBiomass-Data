@@ -220,7 +220,8 @@ province_stpu <- elings_data %>%
             total = alive_pl + dead_pl,
             alive_prop = alive_pl / total,
             dead_prop = dead_pl / total,
-            biomass = sum(biomass_kg_m2))
+            biomass = sum(biomass_kg_m2),
+            biomass_per_pl = biomass / alive_pl)
 
 province_stpu %>%
   kable(caption = "Stipa Pulchra Province Data",
@@ -238,7 +239,8 @@ province_epca <- elings_data %>%
             total = alive_pl + dead_pl,
             alive_prop = alive_pl / total,
             dead_prop = dead_pl / total,
-            biomass = sum(biomass_kg_m2))
+            biomass = sum(biomass_kg_m2),
+            biomass_per_pl = biomass / alive_pl)
 
 province_epca %>% 
   kable(caption = "Epilobium Canum Province Data",
