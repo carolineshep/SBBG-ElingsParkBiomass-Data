@@ -30,6 +30,7 @@ library(here) #helps read in data
 library(dplyr) #helps with data analysis
 library(stargazer) #helps make pretty tables to show data in knitted html or to save as png
 library(lubridate) #helps R recognize dates
+library(kableExtra)
 ```
 
 ## Introduction:
@@ -101,14 +102,14 @@ elings_data <- elings_data %>%
 # group by plot and sum biomass 
 
 biomass_plot <- elings_data %>% 
-  group_by(plot_id) %>% 
+  group_by(plot_id, treatment) %>% 
   summarise(biomass_sum = sum(biomass_kg_m2))
 
 # group by plot and sum mortality
 # I double checked and this is correctly summing # of alive plants
 
 mort_plot <- elings_data %>% 
-  group_by(plot_id) %>% 
+  group_by(plot_id, treatment) %>% 
   summarise(mort_sum = sum(mort_status, na.rm = TRUE))
 
 # group by treatment and sum biomass
@@ -134,7 +135,7 @@ Looking at trends in mortality and biomass based on plot and treatment.
 # explore the data! look at trends!
 
 #graphing biomass by plot
-ggplot(data = biomass_plot, aes(x = plot_id, y = biomass_sum)) +
+ggplot(data = biomass_plot, aes(x = plot_id, y = biomass_sum, fill = treatment)) +
   geom_col() +
   theme_bw() +
   labs(x = "Plot ID",
@@ -148,7 +149,7 @@ ggplot(data = biomass_treatment, aes(x = treatment, y = biomass_sum)) +
        y = "Total Biomass (kg/m2)")
 
 # graphing mortality by plot
-ggplot(mort_plot, aes(x = plot_id, y = mort_sum)) +
+ggplot(mort_plot, aes(x = plot_id, y = mort_sum, fill = treatment)) +
   geom_col() +
   theme_bw() +
   labs(x = "Plot ID",
@@ -305,7 +306,7 @@ ggplot(data = species_data, aes(x = species_id, y = alive_prop)) +
   labs(x = "Species",
        y = "Proportion of living plants")
 
-stargazer(species_data, type = "html", summary = FALSE)
+stargazer(species_data, type = "text", summary = FALSE)
 
 ```
 
