@@ -77,12 +77,12 @@ elings_data <- read.csv(here("ElingsMonitoringData_2024July.csv")) %>%
                               species_id == "RHCR" ~ "shrub",
                               species_id == "RHIN" ~ "shrub",
                               species_id == "SAAP" ~ "shrub")) %>% 
-  mutate(mortality_status = case_when(mortality_status == "A" ~ "1",
+  mutate(mort_status = case_when(mortality_status == "A" ~ "1",
                                       mortality_status == "D" ~ "0"))
 
 class(elings_data$mortality_status)
 
-elings_data$mort_status <- as.numeric(elings_data$mortality_status)
+elings_data$mort_status <- as.numeric(elings_data$mort_status)
 
 class(elings_data$mort_status)
 
@@ -177,9 +177,9 @@ The following code examines the differences in biomass and mortality for species
 #calculating % plants alive in each plot
 
 #filtering for only tarp treatment to see the total number of plants (both A and D)
-tarp_filt <- elings_data %>% #calling on elings_data for the data frame
-  filter(mortality_status == "D" | mortality_status == "A") %>% #filtering for non-NA values
-  filter(treatment == "tarp") %>% #filtering for only tarped plants
+tarp_filt <- elings_data %>% 
+  filter(mortality_status == "D" | mortality_status == "A") %>% 
+  filter(treatment == "tarp") %>% 
   count(mortality_status) %>%
             bind_rows(summarise(., across(where(is.numeric), sum),
                                    across(where(is.character), ~'Total'))) %>% 
@@ -281,7 +281,31 @@ Now let's plot the filtered data
 
 ```{r}
 
+species_data <- elings_data %>% 
+  group_by(species_id) %>% 
+  summarise(alive_pl = sum(mortality_status == "A"),
+            dead_pl = sum(mortality_status == "D"),
+            total = alive_pl + dead_pl,
+            alive_prop = alive_pl / total,
+            dead_prop = dead_pl / total,
+            biomass = sum(biomass_kg_m2),
+            biomass_per_pl = biomass / alive_pl)
 
+ggplot(data = species_data, aes(x = species_id, y = biomass)) +
+  geom_col() +
+  theme_bw() +
+  labs(x = "Species", 
+       y = "Average Biomass (kg/m2) per plant")
+  
+
+
+ggplot(data = species_data, aes(x = species_id, y = alive_prop)) +
+  geom_col() +
+  theme_bw() +
+  labs(x = "Species",
+       y = "Proportion of living plants")
+
+stargazer(species_data, type = "html", summary = FALSE)
 
 ```
 
