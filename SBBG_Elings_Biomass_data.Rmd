@@ -28,7 +28,7 @@ library(janitor) #helps clean data, idk if it does anything else
 library(tidyverse) #helps clean and manipulate data
 library(here) #helps read in data 
 library(dplyr) #helps with data analysis
-library(kableExtra) #helps make pretty tables to show data in knitted html or to save as png
+#library(kableExtra) #helps make pretty tables to show data in knitted html or to save as png
 ```
 
 ## Introduction:
@@ -40,11 +40,12 @@ In this analysis, we explore the relationship between different weed treatments 
 ```{r}
 # read in the data
 # Make sure you have the most updated data
-elings_data <- read.csv(here("ElingsMonitoringData25March2024.csv")) %>% clean_names() %>% 
+elings_data <- read.csv(here("ElingsMonitoringData_March2024.csv")) %>% 
+  clean_names() %>% 
   filter(species_id != "EMPTY") %>%  
   rename(width1_cm = width1_cm_widest_diameter, # changing column names to be less annoying
          width2_cm = width2_cm_perpendicular_to_w1_measurement) %>% 
-  mutate(width1_m = width1_cm/100,  #making a width column in meters
+  mutate(width1_m = width1_cm/100,  #making a width column in meters instead of cm
          width2_m = width2_cm/100) %>% 
   mutate(veg_type = case_when(species_id == "BOBA" ~ "herb",
                               species_id == "STPU" ~ "herb",
