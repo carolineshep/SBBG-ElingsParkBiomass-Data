@@ -82,7 +82,7 @@ elings_data <- read.csv(here("ElingsMonitoringData_2024July.csv")) %>%
 
 class(elings_data$mortality_status)
 
-elings_data$mort_status <- as.numeric(elings_data$mortality_status)
+elings_data$mort_status <- as.numeric(elings_data$mort_status)
 
 class(elings_data$mort_status)
 
@@ -305,7 +305,7 @@ ggplot(data = species_data, aes(x = species_id, y = alive_prop)) +
   labs(x = "Species",
        y = "Proportion of living plants")
 
-stargazer(species_data, type = "text", summary = FALSE)
+stargazer(species_data, type = "html", summary = FALSE)
 
 ```
 
