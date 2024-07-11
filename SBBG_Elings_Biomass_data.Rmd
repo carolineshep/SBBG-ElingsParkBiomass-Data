@@ -236,6 +236,7 @@ region_filt <- elings_data %>%
             biomass = sum(biomass_kg_m2))
 
 
+
 province_stpu <- elings_data %>% 
   filter(province_info == "SB" | province_info == "IRV" | province_info == "SD") %>% 
   filter(species_id == "STPU") %>% 
