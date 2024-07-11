@@ -30,6 +30,7 @@ library(here) #helps read in data
 library(dplyr) #helps with data analysis
 library(stargazer) #helps make pretty tables to show data in knitted html or to save as png
 library(lubridate) #helps R recognize dates
+library(kableExtra)
 ```
 
 ## Introduction:
@@ -101,14 +102,16 @@ elings_data <- elings_data %>%
 # group by plot and sum biomass 
 
 biomass_plot <- elings_data %>% 
-  group_by(plot_id) %>% 
+  group_by(plot_id,
+           treatment) %>% 
   summarise(biomass_sum = sum(biomass_kg_m2))
 
 # group by plot and sum mortality
 # I double checked and this is correctly summing # of alive plants
 
 mort_plot <- elings_data %>% 
-  group_by(plot_id) %>% 
+  group_by(plot_id,
+           treatment) %>% 
   summarise(mort_sum = sum(mort_status, na.rm = TRUE))
 
 # group by treatment and sum biomass
@@ -134,7 +137,7 @@ Looking at trends in mortality and biomass based on plot and treatment.
 # explore the data! look at trends!
 
 #graphing biomass by plot
-ggplot(data = biomass_plot, aes(x = plot_id, y = biomass_sum)) +
+ggplot(data = biomass_plot, aes(x = plot_id, y = biomass_sum, fill = treatment)) +
   geom_col() +
   theme_bw() +
   labs(x = "Plot ID",
@@ -148,7 +151,7 @@ ggplot(data = biomass_treatment, aes(x = treatment, y = biomass_sum)) +
        y = "Total Biomass (kg/m2)")
 
 # graphing mortality by plot
-ggplot(mort_plot, aes(x = plot_id, y = mort_sum)) +
+ggplot(mort_plot, aes(x = plot_id, y = mort_sum, fill = treatment)) +
   geom_col() +
   theme_bw() +
   labs(x = "Plot ID",
@@ -195,7 +198,7 @@ mulch_filt <- elings_data %>%
                                    across(where(is.character), ~'Total'))) %>% 
   rename(plant_count = n)
 
-stargazer(mulch_filt, summary = FALSE, type = "text")
+#stargazer(mulch_filt, summary = FALSE, type = "text")
 
 #filtering for mortality data and grouping by plot
 plot_filt <- elings_data %>% 
@@ -204,7 +207,6 @@ plot_filt <- elings_data %>%
             dead_pl = sum(mortality_status == "D"),
             total = alive_pl + dead_pl,
             alive_prop = alive_pl / total,
-            dead_prop = dead_pl / total,
             biomass = sum(biomass_kg_m2)) %>% 
   mutate(treatment = case_when(plot_id == "A" ~ "Tarp", # adding a treatment column
                                plot_id == "B" ~ "Mulch",
@@ -215,13 +217,14 @@ plot_filt <- elings_data %>%
                                plot_id == "G" ~ "Mulch",
                                plot_id == "H" ~ "Tarp"))
 
-stargazer(plot_filt, summary = FALSE, type = "text")
+#stargazer(plot_filt, summary = FALSE, type = "text")
 
-# plot_filt %>% 
-#  kable(caption = "Plot Mortality Status Data",
-  #      col.names = c("Plot ID","# Alive Plants","# Dead Plants", "Total","Proportion of plants alive","Proportion of plants dead", "Biomass kg/m2", "Treatment"),
-   #     format = "html",table.attr = "style = 'width:70%'") #%>% 
- # kable_styling(bootstrap_options = "striped")
+plot_filt %>% 
+kable(caption = "Plot Mortality Status Data",
+      col.names = c("Plot ID","# Alive Plants","# Dead Plants", "Total","Proportion of plants alive", "Biomass kg/m2", "Treatment"),
+      format = "html",table.attr = "style = 'width:70%'",
+      digits = 2) %>% 
+kable_styling(bootstrap_options = "striped")
 
 region_filt <- elings_data %>% 
   group_by(region) %>% 
@@ -233,8 +236,6 @@ region_filt <- elings_data %>%
             biomass = sum(biomass_kg_m2))
 
 
-
-
 province_stpu <- elings_data %>% 
   filter(province_info == "SB" | province_info == "IRV" | province_info == "SD") %>% 
   filter(species_id == "STPU") %>% 
@@ -243,17 +244,17 @@ province_stpu <- elings_data %>%
             dead_pl = sum(mortality_status == "D"),
             total = alive_pl + dead_pl,
             alive_prop = alive_pl / total,
-            dead_prop = dead_pl / total,
             biomass = sum(biomass_kg_m2),
             biomass_per_pl = biomass / alive_pl)
 
-#province_stpu %>%
-#  kable(caption = "Stipa Pulchra Province Data",
- #       col.names = c("Province Info", "# Alive Plants", "# Dead Plants", "Total", "Proportion of plants alive", "Proportion of plants dead", "Biomass kg/m2", "Biomass kg/m2 per plant"),
- #       format = "html", table.attr = "style = 'width:80%;'") %>% 
-  #kable_styling(bootstrap_options = "striped")
+province_stpu %>%
+  kable(caption = "Stipa Pulchra Province Data",
+        col.names = c("Province Info", "# Alive Plants", "# Dead Plants", "Total", "Proportion of plants alive", "Total Biomass kg/m2", "Biomass kg/m2 per plant"),
+        format = "html", table.attr = "style = 'width:80%;'",
+        digits = 2) %>% 
+  kable_styling(bootstrap_options = "striped")
 
-stargazer(province_stpu, summary = FALSE, type = "text")  
+#stargazer(province_stpu, summary = FALSE, type = "text")  
 
 province_epca <- elings_data %>% 
   filter(province_info == "SB" | province_info == "IRV" | province_info == "SD") %>% 
@@ -263,17 +264,17 @@ province_epca <- elings_data %>%
             dead_pl = sum(mortality_status == "D"),
             total = alive_pl + dead_pl,
             alive_prop = alive_pl / total,
-            dead_prop = dead_pl / total,
             biomass = sum(biomass_kg_m2),
             biomass_per_pl = biomass / alive_pl)
 
-#province_epca %>% 
- # kable(caption = "Epilobium Canum Province Data",
-  #      col.names = c("Province Info", "# Alive Plants", "# Dead Plants", "Total","Proportion of plants alive", "Proportion of plants dead", "Biomass kg/m2", "Biomass kg/m2 per plant"),
-#        format = "html", table.attr = "style = 'width:80%;'") %>% 
- # kable_styling(bootstrap_options = c("hover", "condensed"))
+province_epca %>% 
+  kable(caption = "Epilobium Canum Province Data",
+        col.names = c("Province Info", "# Alive Plants", "# Dead Plants", "Total","Proportion of plants alive", "Biomass kg/m2", "Biomass kg/m2 per plant"),
+        format = "html", table.attr = "style = 'width:80%;'",
+        digits = 2) %>% 
+  kable_styling(bootstrap_options = c("hover", "condensed"))
 
-stargazer(province_epca, type = "text", summary = FALSE)
+#stargazer(province_epca, type = "text", summary = FALSE)
 
 ```
 
@@ -287,7 +288,6 @@ species_data <- elings_data %>%
             dead_pl = sum(mortality_status == "D"),
             total = alive_pl + dead_pl,
             alive_prop = alive_pl / total,
-            dead_prop = dead_pl / total,
             biomass = sum(biomass_kg_m2),
             biomass_per_pl = biomass / alive_pl)
 
@@ -305,7 +305,17 @@ ggplot(data = species_data, aes(x = species_id, y = alive_prop)) +
   labs(x = "Species",
        y = "Proportion of living plants")
 
-stargazer(species_data, type = "html", summary = FALSE)
+#stargazer(species_data, type = "html", summary = FALSE)
+
+species_data %>% 
+  kable(caption = "Mortality and Biomass data by Species",
+        col.names = c("Species", "# Alive Plants", "# Dead Plants", "Total # Plants","Proportion of plants alive", "Total Biomass kg/m2", "Biomass kg/m2 per plant"),
+        format = "html", 
+        table.attr = "style = 'width:80%;'",
+        digits = 2,
+        na.rm = TRUE) %>% 
+  kable_styling(bootstrap_options = c("hover", "condensed"))
+
 
 ```
 
