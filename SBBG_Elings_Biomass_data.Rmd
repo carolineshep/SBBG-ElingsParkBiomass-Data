@@ -37,7 +37,7 @@ library(kableExtra) #this was blocked by IT for a bit, but it's working now and 
 
 This code aims to synthesize and visualize data collected on biomass (kg/m2) and mortality of plants in the Elings Park Restoration Project. The Santa Barbara Botanic Garden, in partnership with Channel Islands Restoration, is transforming a 1-acre plot of land previously full of invasive weeds, into a better-functioning native habitat.
 
-In this analysis, we explore the relationship between different weed treatments (sheet mulching and plastic tarping) and plant mortality and growth. 
+In this analysis, we explore the relationship between different weed treatments (sheet mulching and plastic tarping) and plant mortality and growth.
 
 ```{r}
 # read in the data
@@ -126,10 +126,10 @@ mort_treatment <- elings_data %>%
 
 ```
 
-
 ### Data exploration
 
 Looking at trends in mortality and biomass based on plot and treatment.
+
 ```{r}
 
 # explore the data! look at trends!
@@ -164,9 +164,10 @@ ggplot(data = mort_treatment, aes(x = treatment, y = mort_sum)) +
 
 ```
 
-
 ## Continued analysis
+
 The following code examines the differences in biomass and mortality for species based on region, province, treatment, and plot.
+
 ```{r}
 
 #calculating % plants alive in each plot
@@ -314,34 +315,30 @@ stargazer(species_data, type = "text", summary = FALSE,
 
 ```
 
-
-
-
 ## Future plans
 
 Future analysis will include:
 
-- color = treatment to make graphs better
+-   color = treatment to make graphs better
 
-- analyzing average biomass per plant per plot
+-   analyzing average biomass per plant per plot
 
-- average biomass per species per treatment
+-   average biomass per species per treatment
 
-- compare san diego scrub species across treatments (bergaro, lycium, agave, amorpha, euphorbia) how are species that wouldn't normally be found at Elings
+-   compare san diego scrub species across treatments (bergaro, lycium, agave, amorpha, euphorbia) how are species that wouldn't normally be found at Elings
 
-- rates of growth in future surveys
+-   rates of growth in future surveys
 
-- does decomposition correlate to plant growth in any way?
-
+-   does decomposition correlate to plant growth in any way?
 
 The analysis will (hopefully) answer these questions:
 
-- Do tarped plots or mulched plots promote more growth?
+-   Do tarped plots or mulched plots promote more growth?
 
-- Which treatment has the lowest mortality rate?
+-   Which treatment has the lowest mortality rate?
 
-- Which species performed the best (in terms of growth and survival) in each plot and each treatment? Is one treatment better for some plants, while the other treatment is better for other plants?
+-   Which species performed the best (in terms of growth and survival) in each plot and each treatment? Is one treatment better for some plants, while the other treatment is better for other plants?
 
-- Does origin impact plant mortality or growth?
+-   Does origin impact plant mortality or growth?
 
-- Which stpu location grew the most? Which stpu location had the best survival rates?
+-   Which stpu location grew the most? Which stpu location had the best survival rates?
